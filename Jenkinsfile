@@ -30,9 +30,9 @@ pipeline {
         stage('K8s Deploy') {
             steps {
                 script {
-                    withAWS(credentials: 'AWS_CREDS', region: $EKS_REGION) {
+                    withAWS(credentials: 'AWS_CREDS', region: 'us-east-1') {
                         sh 'kubectl version'
-                        sh 'aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $EKS_REGION'
+                        sh 'aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region us-east-1'
                         sh 'kubectl apply -f deployment.yaml'
                     }
                 }
