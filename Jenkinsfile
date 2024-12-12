@@ -4,8 +4,6 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('docker_creds')
         EKS_CLUSTER_NAME = 'labekscluster'
         EKS_REGION = 'us-east-1'
-        AWS_ACCESS_KEY_ID = ''
-        AWS_SECRET_KEY_ID = ''
     }
     stages { 
 
