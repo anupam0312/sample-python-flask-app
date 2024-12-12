@@ -1,7 +1,11 @@
 pipeline {
     agent any 
     environment {
-    DOCKERHUB_CREDENTIALS = credentials('docker_creds')
+        DOCKERHUB_CREDENTIALS = credentials('docker_creds')
+        EKS_CLUSTER_NAME = 'labekscluster'
+        EKS_REGION = 'us-east-1'
+        AWS_ACCESS_KEY_ID = ''
+        AWS_SECRET_KEY_ID = ''
     }
     stages { 
 
@@ -23,6 +27,17 @@ pipeline {
         stage('Push image') {
             steps{
                 sh 'docker push kbindesh/flaskapp:$BUILD_NUMBER'
+            }
+        }
+        stage('K8s Deploy') {
+            steps {
+                script {
+                    withAWS(credentials: 'AWS_CREDS', region: $EKS_REGION) {
+                        sh 'kubectl version'
+                        sh 'aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $EKS_REGION'
+                        sh 'kubectl apply -f deployment.yaml'
+                    }
+                }
             }
         }
 }
